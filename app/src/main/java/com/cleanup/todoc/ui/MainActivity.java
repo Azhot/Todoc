@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.service.model.Project;
 import com.cleanup.todoc.service.model.Task;
+import com.cleanup.todoc.viewmodel.ProjectViewModel;
 import com.cleanup.todoc.viewmodel.TaskViewModel;
 
 import java.util.ArrayList;
@@ -40,23 +41,27 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    private final ArrayList<Project> allProjects = new ArrayList<>();
 
     /**
      * List of all current tasks of the application
      */
     @NonNull
     private final ArrayList<Task> tasks = new ArrayList<>();
+    /**
+     * The adapter which handles the list of tasks
+     */
+    private final TasksAdapter tasksAdapter = new TasksAdapter(tasks, allProjects, this);
+
 
     /**
      * The ViewModel which handles the tasks repository
      */
     private TaskViewModel taskViewModel;
-
     /**
-     * The adapter which handles the list of tasks
+     * The ViewModel which handles the projects repository
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private ProjectViewModel projectViewModel;
 
     /**
      * The sort method to be used to display tasks
@@ -106,20 +111,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
-        lblNoTasks.setVisibility(View.GONE); // to cope with this flashing on app opening if data exists
 
-        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> t) {
-                tasks.clear();
-                tasks.addAll(t);
-                updateTasks();
-            }
-        });
+        initData();
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        listTasks.setAdapter(adapter);
+        listTasks.setAdapter(tasksAdapter);
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,8 +152,32 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     @Override
     public void onDeleteTask(Task task) {
-        taskViewModel.delete(task);
+        this.taskViewModel.delete(task);
         updateTasks();
+    }
+
+    /**
+     * Initiates the Tasks and Projects data
+     */
+    private void initData() {
+        this.taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        this.taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> t) {
+                tasks.clear();
+                tasks.addAll(t);
+                updateTasks();
+            }
+        });
+
+        this.projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
+        this.projectViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
+            @Override
+            public void onChanged(List<Project> p) {
+                allProjects.clear();
+                allProjects.addAll(p);
+            }
+        });
     }
 
     /**
@@ -183,10 +203,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
             // If both project and name of the task have been set
             else if (taskProject != null) {
-                // TODO: Replace this by id of persisted task
-                long id = (long) (Math.random() * 50000);
-
-
                 Task task = new Task(
                         taskProject.getId(),
                         taskName,
@@ -228,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        taskViewModel.insert(task);
+        this.taskViewModel.insert(task);
         updateTasks();
     }
 
@@ -236,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * Updates the list of tasks in the UI
      */
     private void updateTasks() {
-        lblNoTasks.setVisibility(View.GONE); // to cope with this flashing on app opening if data exists
         if (tasks.size() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
@@ -258,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                     break;
 
             }
-            adapter.updateTasks(tasks);
+            tasksAdapter.updateTasks(tasks);
         }
     }
 

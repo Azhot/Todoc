@@ -3,16 +3,24 @@ package com.cleanup.todoc.service.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
+import java.util.List;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 /**
  * <p>Model for the tasks of the application.</p>
  *
  * @author Gaëtan HERFRAY
  */
-@Entity(tableName = "task_table")
+@Entity(tableName = "task_table", foreignKeys = @ForeignKey(
+        entity = Project.class,
+        parentColumns = "id",
+        childColumns = "projectId",
+        onDelete = CASCADE))
 public class Task {
     /**
      * The unique identifier of the task
@@ -87,11 +95,16 @@ public class Task {
     /**
      * Returns the project associated to the task.
      *
+     * @param projects the list of projects
      * @return the project associated to the task
      */
     @Nullable
-    public Project getProject() {
-        return Project.getProjectById(projectId);
+    public Project getProject(List<Project> projects) {
+        for (Project project : projects) {
+            if (project.getId() == projectId)
+                return project;
+        }
+        return null;
     }
 
     /**
