@@ -18,7 +18,7 @@ public class ProjectViewModel extends AndroidViewModel {
 
     public ProjectViewModel(@NonNull Application application) {
         super(application);
-        this.projectRepository = Injection.provideProjectRepository(application);
+        this.projectRepository = Injection.provideProjectRepository(application.getApplicationContext());
     }
 
     public void insert(Project project) {

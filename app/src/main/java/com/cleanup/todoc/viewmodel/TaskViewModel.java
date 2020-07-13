@@ -18,7 +18,7 @@ public class TaskViewModel extends AndroidViewModel {
 
     public TaskViewModel(@NonNull Application application) {
         super(application);
-        this.taskRepository = Injection.provideTaskRepository(application);
+        this.taskRepository = Injection.provideTaskRepository(application.getApplicationContext());
     }
 
     public void insert(final Task task) {
@@ -33,7 +33,7 @@ public class TaskViewModel extends AndroidViewModel {
         this.taskRepository.delete(task);
     }
 
-    public LiveData<List<Task>> getTasks() {
-        return this.taskRepository.getTasks();
+    public LiveData<List<Task>> getAllTasks() {
+        return this.taskRepository.getAllTasks();
     }
 }

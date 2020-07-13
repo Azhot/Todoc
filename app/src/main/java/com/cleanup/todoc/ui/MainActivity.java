@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     private void initData() {
         this.taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        this.taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
+        this.taskViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> t) {
                 tasks.clear();

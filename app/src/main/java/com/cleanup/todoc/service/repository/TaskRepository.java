@@ -47,7 +47,7 @@ public class TaskRepository {
         });
     }
 
-    public LiveData<List<Task>> getTasks() {
-        return this.taskDao.getTasks();
+    public LiveData<List<Task>> getAllTasks() {
+        return this.taskDao.getAllTasks();
     }
 }
