@@ -103,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private TextView lblNoTasks;
 
+    public static final String KEY_SORT_METHOD = "KEY_SORT_METHOD";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
         initData();
+        checkSavedInstanceState(savedInstanceState);
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(tasksAdapter);
@@ -123,6 +126,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 showAddTaskDialog();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.clear();
+        savedInstanceState.putInt(KEY_SORT_METHOD, sortMethod.getMode());
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -180,6 +190,29 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         });
     }
 
+    private void checkSavedInstanceState(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            switch (savedInstanceState.getInt(KEY_SORT_METHOD)) {
+                case 1:
+                    sortMethod = SortMethod.ALPHABETICAL;
+                    break;
+                case 2:
+                    sortMethod = SortMethod.ALPHABETICAL_INVERTED;
+                    break;
+                case 3:
+                    sortMethod = SortMethod.OLD_FIRST;
+                    break;
+                case 4:
+                    sortMethod = SortMethod.RECENT_FIRST;
+                    break;
+                default:
+                    sortMethod = SortMethod.NONE;
+                    break;
+            }
+            updateTasks();
+        }
+    }
+
     /**
      * Called when the user clicks on the positive button of the Create Task Dialog.
      *
@@ -214,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 dialogInterface.dismiss();
             }
             // If name has been set, but project has not been set (this should never occur)
-            else{
+            else {
                 dialogInterface.dismiss();
             }
         }
@@ -338,22 +371,32 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         /**
          * Sort alphabetical by name
          */
-        ALPHABETICAL,
+        ALPHABETICAL(1),
         /**
          * Inverted sort alphabetical by name
          */
-        ALPHABETICAL_INVERTED,
+        ALPHABETICAL_INVERTED(2),
         /**
          * Lastly created first
          */
-        RECENT_FIRST,
+        RECENT_FIRST(3),
         /**
          * First created first
          */
-        OLD_FIRST,
+        OLD_FIRST(4),
         /**
          * No sort
          */
-        NONE
+        NONE(0);
+
+        private int mode;
+
+        SortMethod(int mode) {
+            this.mode = mode;
+        }
+
+        public int getMode() {
+            return this.mode;
+        }
     }
 }
