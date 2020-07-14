@@ -21,30 +21,15 @@ public class TaskRepository {
     }
 
     public void insert(final Task task) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                taskDao.insert(task);
-            }
-        });
+        this.executor.execute(() -> taskDao.insert(task));
     }
 
     public void update(final Task task) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                taskDao.update(task);
-            }
-        });
+        this.executor.execute(() -> taskDao.update(task));
     }
 
     public void delete(final Task task) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                taskDao.delete(task);
-            }
-        });
+        this.executor.execute(() -> taskDao.delete(task));
     }
 
     public LiveData<List<Task>> getAllTasks() {

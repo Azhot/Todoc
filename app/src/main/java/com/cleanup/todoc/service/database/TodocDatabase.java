@@ -21,14 +21,11 @@ public abstract class TodocDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            Executors.newSingleThreadExecutor().execute(new Runnable() {
-                @Override
-                public void run() {
-                    ProjectDao projectDao = INSTANCE.projectDao();
-                    projectDao.insert(new Project("Projet Tartampion", 0xFFEADAD1));
-                    projectDao.insert(new Project("Projet Lucidia", 0xFFB4CDBA));
-                    projectDao.insert(new Project("Projet Circus", 0xFFA3CED2));
-                }
+            Executors.newSingleThreadExecutor().execute(() -> {
+                ProjectDao projectDao = INSTANCE.projectDao();
+                projectDao.insert(new Project("Projet Tartampion", 0xFFEADAD1));
+                projectDao.insert(new Project("Projet Lucidia", 0xFFB4CDBA));
+                projectDao.insert(new Project("Projet Circus", 0xFFA3CED2));
             });
         }
     };

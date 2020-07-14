@@ -21,30 +21,15 @@ public class ProjectRepository {
     }
 
     public void insert(final Project project) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                projectDao.insert(project);
-            }
-        });
+        this.executor.execute(() -> projectDao.insert(project));
     }
 
     public void update(final Project project) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                projectDao.update(project);
-            }
-        });
+        this.executor.execute(() -> projectDao.update(project));
     }
 
     public void delete(final Project project) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                projectDao.delete(project);
-            }
-        });
+        this.executor.execute(() -> projectDao.delete(project));
     }
 
     public LiveData<List<Project>> getAllProjects() {
