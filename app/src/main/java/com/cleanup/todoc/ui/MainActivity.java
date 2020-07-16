@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.clear();
         savedInstanceState.putInt(KEY_SORT_METHOD, sortMethod.getMode());
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -187,16 +186,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                     sortMethod = SortMethod.ALPHABETICAL_INVERTED;
                     break;
                 case 3:
-                    sortMethod = SortMethod.OLD_FIRST;
+                    sortMethod = SortMethod.RECENT_FIRST;
                     break;
                 case 4:
-                    sortMethod = SortMethod.RECENT_FIRST;
+                    sortMethod = SortMethod.OLD_FIRST;
                     break;
                 default:
                     sortMethod = SortMethod.NONE;
                     break;
             }
             updateTasks();
+            savedInstanceState.clear();
         }
     }
 
