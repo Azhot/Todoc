@@ -6,7 +6,7 @@ This repository is a mini Android app designed to facilitate and organize tasks 
 
 ## Motivation
 This app is the fifth project part of the [Openclassrooms](https://openclassrooms.com/) training course that I am pursuing in order to become an Android application developer.
-This project target was to implement a Room database in order to manage the persistence of data.
+<b>This project target was to implement a Room database to an </b>[already existing](https://drive.google.com/file/d/1qmQ5Y1CvVQlsYLGMy_QbUYXpROI54aOt/view) <b>app architecture in order to manage the persistence of data.</b>
 
 ## Code style
 The project uses [AOSP Java Code Style](https://source.android.com/setup/contribute/code-style#follow-field-naming-conventions).
